@@ -50,7 +50,10 @@ export const deleteUserController = (req, res) => {
 }
 
 export const getAllUsersController = (req, res) => {
-    dbInstance.findAll({ raw: true }).then(users => {
+    let limit = +req.query.size;
+    let offset = (+req.query.page-1)*limit;
+    dbInstance.findAndCountAll({ raw: true, limit, offset }).then(users => {
+        console.log(users.count)
         res.end(JSON.stringify(users));
     }).catch(err => console.log(err));
 }
